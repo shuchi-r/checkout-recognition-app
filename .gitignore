@@ -1,0 +1,16 @@
+# frontend
+web/node_modules/
+web/dist/
+web/.env
+
+# backend
+api/.env
+api/api
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# misc
+*.log
