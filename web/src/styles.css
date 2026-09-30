@@ -1,34 +1,734 @@
-:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #f4f6fb; font-synthesis: none; }
-* { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
-button, input, textarea { font: inherit; }
-button { cursor: pointer; }
-.page-shell { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
-.card { width: min(720px, 100%); background: white; border: 1px solid #e3e7ef; border-radius: 20px; padding: 32px; box-shadow: 0 16px 50px rgba(23, 32, 51, .08); }
-.brand-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 24px; }
-.eyebrow { margin: 0 0 5px; color: #5c6ac4; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 12px; }
-h1, h2 { margin: 0; }
-h1 { font-size: clamp(25px, 5vw, 36px); letter-spacing: -.03em; }
-.intro { color: #667085; line-height: 1.6; margin: 0 0 24px; }
-.form-grid { display: grid; gap: 18px; }
-label { display: grid; gap: 7px; font-weight: 650; font-size: 14px; }
-input, textarea { width: 100%; border: 1px solid #d5dae4; border-radius: 10px; padding: 12px 13px; color: #172033; background: #fff; outline: none; transition: border-color .15s, box-shadow .15s; }
-input:focus, textarea:focus { border-color: #6674d9; box-shadow: 0 0 0 3px rgba(102, 116, 217, .12); }
-.primary, .secondary { border-radius: 10px; padding: 11px 16px; border: 1px solid transparent; font-weight: 700; }
-.primary { color: white; background: #5363d7; }
-.primary:hover { background: #4453c5; }
-.secondary { color: #344054; background: #f8f9fc; border-color: #dfe3eb; }
-.hint { color: #667085; font-weight: 450; }
-.success, .error-banner { margin-top: 16px; padding: 12px 14px; border-radius: 10px; line-height: 1.45; }
-.success { background: #ecfdf3; color: #087443; }
-.error-banner { background: #fff1f2; color: #b42318; }
-.code-card { margin-top: 18px; padding: 20px; border-radius: 14px; background: #f4f5ff; text-align: center; display: grid; gap: 6px; }
-.code-card span, .code-card small { color: #667085; }
-.code-card strong { font-size: 34px; letter-spacing: .18em; }
-.signed-in { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: #f8f9fc; border-radius: 10px; padding: 11px 13px; margin-bottom: 18px; }
-.signed-in button { margin-left: auto; border: 0; background: transparent; color: #5363d7; font-weight: 700; }
-.modal-backdrop { position: fixed; inset: 0; background: rgba(16, 24, 40, .5); display: grid; place-items: center; padding: 16px; }
-.modal { width: min(440px, 100%); background: white; border-radius: 18px; padding: 26px; box-shadow: 0 24px 80px rgba(0,0,0,.22); }
-.modal p { color: #667085; line-height: 1.55; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
-@media (max-width: 560px) { .card { padding: 22px; } .brand-row { align-items: stretch; flex-direction: column; } .brand-row button { align-self: flex-start; } }
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  font-family: "Inter", Arial, sans-serif;
+
+  color: #172033;
+  background: #f4f7fb;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-light: #eef2ff;
+
+  --text: #172033;
+  --muted: #64748b;
+
+  --border: #e2e8f0;
+  --surface: #ffffff;
+  --background: #f4f7fb;
+
+  --success: #059669;
+  --success-bg: #ecfdf5;
+
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+
+  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 35px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.15);
+
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(99, 102, 241, 0.1),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(14, 165, 233, 0.08),
+      transparent 30%
+    ),
+    var(--background);
+
+  color: var(--text);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+#root {
+  min-height: 100vh;
+}
+
+.page-shell {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+}
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.card {
+  width: min(720px, 100%);
+
+  padding: 34px;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 24px;
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-bottom: 25px;
+  margin-bottom: 28px;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+
+  color: var(--primary);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.brand-row h1 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+
+  letter-spacing: -0.8px;
+}
+
+/* =========================================================
+   INTRO TEXT
+   ========================================================= */
+
+.intro {
+  margin: 0 0 25px;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.form-grid label,
+.modal label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.form-grid input,
+.form-grid textarea,
+.modal input {
+  width: 100%;
+
+  padding: 13px 14px;
+
+  border: 1px solid #d8e0ea;
+  border-radius: 11px;
+
+  background: #fbfdff;
+
+  color: var(--text);
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.form-grid textarea {
+  min-height: 110px;
+
+  resize: vertical;
+}
+
+.form-grid input::placeholder,
+.form-grid textarea::placeholder,
+.modal input::placeholder {
+  color: #94a3b8;
+}
+
+.form-grid input:hover,
+.form-grid textarea:hover,
+.modal input:hover {
+  border-color: #b8c4d4;
+}
+
+.form-grid input:focus,
+.form-grid textarea:focus,
+.modal input:focus {
+  border-color: var(--primary);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.primary,
+.secondary {
+  border: none;
+  border-radius: 11px;
+
+  padding: 13px 19px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.primary {
+  background: linear-gradient(
+    135deg,
+    #4f46e5,
+    #6366f1
+  );
+
+  color: white;
+
+  box-shadow:
+    0 8px 18px rgba(79, 70, 229, 0.22);
+}
+
+.primary:hover {
+  background: linear-gradient(
+    135deg,
+    #4338ca,
+    #4f46e5
+  );
+
+  box-shadow:
+    0 12px 24px rgba(79, 70, 229, 0.28);
+
+  transform: translateY(-1px);
+}
+
+.secondary {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.secondary:hover {
+  background: #e2e8f0;
+
+  transform: translateY(-1px);
+}
+
+.primary:active,
+.secondary:active {
+  transform: translateY(1px);
+}
+
+/* =========================================================
+   EMAIL RECOGNITION HINT
+   ========================================================= */
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-top: 1px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.hint::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #94a3b8;
+}
+
+.hint:first-letter {
+  color: var(--primary);
+}
+
+/* =========================================================
+   SIGNED IN USER
+   ========================================================= */
+
+.signed-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 22px;
+  padding: 14px 16px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 13px;
+
+  background: var(--success-bg);
+
+  color: #065f46;
+
+  font-size: 13px;
+}
+
+.signed-in strong {
+  font-weight: 800;
+}
+
+.signed-in button {
+  border: none;
+
+  padding: 7px 11px;
+
+  border-radius: 8px;
+
+  background: white;
+  color: #047857;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.signed-in button:hover {
+  background: #f0fdf4;
+}
+
+/* =========================================================
+   SUCCESS MESSAGE
+   ========================================================= */
+
+.success {
+  margin-top: 20px;
+  padding: 13px 15px;
+
+  border: 1px solid #a7f3d0;
+  border-radius: 11px;
+
+  background: var(--success-bg);
+
+  color: #065f46;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   ERROR MESSAGE
+   ========================================================= */
+
+.error-banner {
+  margin-top: 15px;
+  padding: 13px 15px;
+
+  border: 1px solid #fecaca;
+  border-radius: 11px;
+
+  background: var(--danger-bg);
+
+  color: #991b1b;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   POPUP BACKDROP
+   ========================================================= */
+
+.modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.62);
+
+  backdrop-filter: blur(7px);
+
+  z-index: 1000;
+
+  animation: fadeIn 0.2s ease;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+  width: min(440px, 100%);
+
+  padding: 30px;
+
+  border-radius: 21px;
+
+  background: white;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.25);
+
+  animation: modalIn 0.22s ease;
+}
+
+.modal h2 {
+  margin: 0 0 10px;
+
+  color: var(--text);
+
+  font-size: 23px;
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+}
+
+.modal p {
+  margin: 0 0 12px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.modal p strong {
+  color: #334155;
+}
+
+/* =========================================================
+   REGISTRATION SUCCESS POPUP
+   ========================================================= */
+
+.registration-success-modal {
+  text-align: center;
+
+  padding: 32px;
+}
+
+.success-icon {
+  width: 66px;
+  height: 66px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+
+  background: #ecfdf5;
+  color: #059669;
+
+  font-size: 31px;
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 25px rgba(5, 150, 105, 0.15);
+}
+
+.registration-success-modal h2 {
+  margin-bottom: 12px;
+}
+
+.registration-success-modal p {
+  margin-bottom: 8px;
+}
+
+/* =========================================================
+   6-DIGIT CODE BOX
+   ========================================================= */
+
+.registration-code-popup {
+  margin: 23px 0 25px;
+  padding: 21px 15px;
+
+  border: 1px solid #c7d2fe;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8f7ff,
+      #eef2ff
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.registration-code-popup span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #6366f1;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+}
+
+.registration-code-popup strong {
+  display: inline-block;
+
+  color: #312e81;
+
+  font-size: 34px;
+  font-weight: 800;
+
+  letter-spacing: 8px;
+
+  padding-left: 8px;
+}
+
+/* =========================================================
+   CONTINUE BUTTON
+   ========================================================= */
+
+.continue-button {
+  width: 100%;
+
+  padding: 14px 18px;
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   LOGIN MODAL
+   ========================================================= */
+
+.modal form {
+  margin-top: 22px;
+}
+
+.modal-actions {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.modal-actions .primary,
+.modal-actions .secondary {
+  min-height: 44px;
+}
+
+/* Login code input */
+
+.modal input[inputmode="numeric"] {
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  letter-spacing: 7px;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(15px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 650px) {
+  .page-shell {
+    padding: 20px 13px;
+  }
+
+  .card {
+    padding: 23px 18px;
+
+    border-radius: 18px;
+  }
+
+  .brand-row {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding-bottom: 22px;
+    margin-bottom: 23px;
+  }
+
+  .brand-row h1 {
+    font-size: 25px;
+  }
+
+  .brand-row .secondary {
+    width: 100%;
+  }
+
+  .signed-in {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .signed-in button {
+    width: 100%;
+  }
+
+  .modal {
+    padding: 25px 19px;
+
+    border-radius: 18px;
+  }
+
+  .registration-success-modal {
+    padding: 28px 20px;
+  }
+
+  .registration-code-popup strong {
+    font-size: 28px;
+    letter-spacing: 6px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .registration-code-popup strong {
+    font-size: 24px;
+    letter-spacing: 4px;
+
+    padding-left: 4px;
+  }
+}
